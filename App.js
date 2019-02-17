@@ -7,9 +7,10 @@ import Weather from './components/Weather';
 
 export default class App extends React.Component {
   state = {
-    isLoading: false,
-    temperature: 0,
+    isLoading: true,
+    dust: 0,
     weatherCondition: null,
+    dong : null,
     error: null
   };
 
@@ -35,7 +36,13 @@ export default class App extends React.Component {
     )
       .then(res => res.json())
       .then(json => {
-        console.log(json);
+        // console.log(json.list[0].stationName);
+
+        this.setState({
+          dust : json.list[0].pm25Grade,
+          dong : json.list[0].stationName,
+          isLoading: false
+        });
       });
   }
 
@@ -43,7 +50,7 @@ export default class App extends React.Component {
     const { isLoading } = this.state;
     return (
       <View style={styles.container}>
-        {isLoading ? <Text>Fetching The Weather</Text> : <Weather />}
+        {isLoading ? <Text>Fetching The Weather</Text> : <Weather dust={this.state.dust} dong={this.state.dong} />}
       </View>
     );
   }
