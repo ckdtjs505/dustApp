@@ -13,7 +13,7 @@ import { CONSUMER_SECRET } from './util/sgisAPIKey';
 import Weather from './components/Weather';
 import { ScrollView } from 'react-native-gesture-handler';
 import { black } from 'ansi-colors';
-
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const WGS84 = 4326;
 const GRS80 = 5181;
@@ -102,15 +102,15 @@ export default class App extends React.Component {
   bis(pm25, pm10){
     var dustState='';
     if (pm10 <= 15 ) {
-      dustState = 'good';
+      dustState = 'Good';
     } else if(pm10 > 15 && pm10 <= 35){
-      dustState = 'soso'
+      dustState = 'Soso'
     } else if (pm10 > 35 && pm10 <=75) {
-      dustState = 'bad'
+      dustState = 'Bad'
     } else if (pm10 > 75) {
-      dustState = 'veryBad'
+      dustState = 'VeryBad'
     } else {
-      dustState = 'veryBad'
+      dustState = 'VeryBad'
     }
 
     this.setState({
@@ -135,6 +135,15 @@ export default class App extends React.Component {
         </View> 
         :
         <View style={styles.container}>
+          <View style={styles.button}> 
+          <Button 
+              style={styles.button}
+              color = "darkviolet"
+              onPress = {onPressTest}
+              title = "RELOAD"
+            ></Button>
+            
+          </View>
           <Weather
             stationName={this.state.stationName}
             no2Value={this.state.no2Value}
@@ -146,11 +155,7 @@ export default class App extends React.Component {
             time={this.state.time}
             >
           </Weather>
-          <Button 
-            color = "darkviolet"
-            onPress = {onPressTest}
-            title = "restart"
-          />
+         
         </View>       
        
         } 
@@ -174,4 +179,7 @@ const styles = StyleSheet.create({
     fontWeight : 'bold',
     color: 'black'
   },
+  button : {
+    margin : 10
+  }
 });
