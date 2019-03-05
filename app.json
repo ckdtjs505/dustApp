@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "dustApp",
+    "name": "미세마스터",
     "slug": "dustApp",
     "privacy": "public",
     "sdkVersion": "32.0.0",
@@ -10,9 +10,9 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/mainicon.png",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/mainSplash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -23,7 +23,10 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.csfroka.dustapp"
+    },
+    "android": {
+      "package": "com.csfroka.dustapp"
     }
   }
 }

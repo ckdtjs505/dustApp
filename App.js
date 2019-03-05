@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Animated } from 'react-native';
+import { StyleSheet, Text, View, Animated, ActivityIndicator, Button } from 'react-native';
 
 import { API_KEY } from './util/dustAPIKey';
 import { API_AUTH } from './util/sgisAPIKey';
@@ -11,6 +11,9 @@ import { CONSUMER_KET } from './util/sgisAPIKey';
 import { CONSUMER_SECRET } from './util/sgisAPIKey';
 
 import Weather from './components/Weather';
+import { ScrollView } from 'react-native-gesture-handler';
+import { black } from 'ansi-colors';
+
 
 const WGS84 = 4326;
 const GRS80 = 5181;
@@ -25,6 +28,7 @@ export default class App extends React.Component {
     pm25Value : 0,
     so2Value : 0,
     dustStateV : '',
+    time : 0,
     dong : null,
     error: null
   };
@@ -88,6 +92,7 @@ export default class App extends React.Component {
           pm10Value : data.list[0].pm10Value,
           pm25Value : data.list[0].pm25Value,
           so2Value : data.list[0].so2Value,
+          time : data.list[0].dataTime,
           isLoading: false
         });
         this.bis(data.list[0].pm25Value, data.list[0].pm10Value);
@@ -96,13 +101,13 @@ export default class App extends React.Component {
 
   bis(pm25, pm10){
     var dustState='';
-    if (pm25 <= 15 ) {
+    if (pm10 <= 15 ) {
       dustState = 'good';
-    } else if(pm25 > 15 && pm25 <= 35){
+    } else if(pm10 > 15 && pm10 <= 35){
       dustState = 'soso'
-    } else if (pm25 > 35 && pm25 <=75) {
+    } else if (pm10 > 35 && pm10 <=75) {
       dustState = 'bad'
-    } else if (pm25 > 75) {
+    } else if (pm10 > 75) {
       dustState = 'veryBad'
     } else {
       dustState = 'veryBad'
@@ -113,12 +118,23 @@ export default class App extends React.Component {
     })
   }
 
-
   render() {
     const { isLoading } = this.state;
+    const onPressTest = () => {
+      this.setState({
+        isLoading : true
+      });
+      this.componentDidMount();      
+    };
     return (
       <View style={styles.container}>
-        {isLoading ? <Text>Fetching The Weather</Text> :
+        {isLoading ? 
+        <View style={[styles.container, styles.horizontal]}>
+          <ActivityIndicator size="large" color="black" />
+          <Text style={styles.Loding}> Loading ... </Text>
+        </View> 
+        :
+        <View style={styles.container}>
           <Weather
             stationName={this.state.stationName}
             no2Value={this.state.no2Value}
@@ -127,7 +143,17 @@ export default class App extends React.Component {
             pm25Value={this.state.pm25Value}
             so2Value={this.state.so2Value}
             dustStateV={this.state.dustStateV}
-          />}
+            time={this.state.time}
+            >
+          </Weather>
+          <Button 
+            color = "darkviolet"
+            onPress = {onPressTest}
+            title = "restart"
+          />
+        </View>       
+       
+        } 
       </View>
     );
   }
@@ -136,6 +162,16 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff'
-  }
+    backgroundColor: '#efefef',
+    justifyContent: 'center'
+  },
+  horizontal: {
+    alignItems : 'center', 
+  },
+  Loding: {
+    marginTop : 10,   
+    fontSize: 20,
+    fontWeight : 'bold',
+    color: 'black'
+  },
 });
