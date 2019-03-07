@@ -27,4 +27,9 @@ export const dustConditions = {
     // icon: 'weather-hail',
     // img : require('../assets/verybadimg.png')
   },
+  Error : {
+    color : 'gray',
+    title: '-',
+    subtitle: '새로고침 클릭'
+  }
 };

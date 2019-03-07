@@ -22,6 +22,7 @@ export default class App extends React.Component {
   state = {
     isLoading: true,
     stationName: '',
+    coValue : 0,
     no2Value : 0,
     o3Value : 0,
     pm10Value : 0,
@@ -87,6 +88,7 @@ export default class App extends React.Component {
       .then(data => {
         console.log(data.list[0]);
         this.setState({
+          coValue : data.list[0].coValue,
           no2Value : data.list[0].no2Value,
           o3Value : data.list[0].o3Value,
           pm10Value : data.list[0].pm10Value,
@@ -110,7 +112,7 @@ export default class App extends React.Component {
     } else if (pm10 > 75) {
       dustState = 'VeryBad'
     } else {
-      dustState = 'VeryBad'
+      dustState = 'Error'
     }
 
     this.setState({
@@ -124,25 +126,25 @@ export default class App extends React.Component {
       this.setState({
         isLoading : true
       });
-      this.componentDidMount();      
+      this.componentDidMount();
     };
     return (
       <View style={styles.container}>
-        {isLoading ? 
+        {isLoading ?
         <View style={[styles.container, styles.horizontal]}>
           <ActivityIndicator size="large" color="black" />
           <Text style={styles.Loding}> Loading ... </Text>
-        </View> 
+        </View>
         :
         <View style={styles.container}>
-          <View style={styles.button}> 
-          <Button 
+          <View style={styles.button}>
+          <Button
               style={styles.button}
               color = "darkviolet"
               onPress = {onPressTest}
               title = "RELOAD"
             ></Button>
-            
+
           </View>
           <Weather
             stationName={this.state.stationName}
@@ -151,14 +153,15 @@ export default class App extends React.Component {
             pm10Value={this.state.pm10Value}
             pm25Value={this.state.pm25Value}
             so2Value={this.state.so2Value}
+            coValue={this.state.coValue}
             dustStateV={this.state.dustStateV}
             time={this.state.time}
             >
           </Weather>
-         
-        </View>       
-       
-        } 
+
+        </View>
+
+        }
       </View>
     );
   }
@@ -171,10 +174,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   horizontal: {
-    alignItems : 'center', 
+    alignItems : 'center',
   },
   Loding: {
-    marginTop : 10,   
+    marginTop : 10,
     fontSize: 20,
     fontWeight : 'bold',
     color: 'black'
