@@ -11,7 +11,8 @@ import { CONSUMER_KET } from './util/sgisAPIKey';
 import { CONSUMER_SECRET } from './util/sgisAPIKey';
 
 import Weather from './components/Weather';
-import { ScrollView } from 'react-native-gesture-handler';
+import Table from './components/Table';
+
 import { black } from 'ansi-colors';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -22,7 +23,6 @@ export default class App extends React.Component {
   state = {
     isLoading: true,
     stationName: '',
-    coValue : 0,
     no2Value : 0,
     o3Value : 0,
     pm10Value : 0,
@@ -88,7 +88,6 @@ export default class App extends React.Component {
       .then(data => {
         console.log(data.list[0]);
         this.setState({
-          coValue : data.list[0].coValue,
           no2Value : data.list[0].no2Value,
           o3Value : data.list[0].o3Value,
           pm10Value : data.list[0].pm10Value,
@@ -112,7 +111,7 @@ export default class App extends React.Component {
     } else if (pm10 > 75) {
       dustState = 'VeryBad'
     } else {
-      dustState = 'Error'
+      dustState = 'VeryBad'
     }
 
     this.setState({
@@ -144,7 +143,6 @@ export default class App extends React.Component {
               onPress = {onPressTest}
               title = "RELOAD"
             ></Button>
-
           </View>
           <Weather
             stationName={this.state.stationName}
@@ -153,14 +151,11 @@ export default class App extends React.Component {
             pm10Value={this.state.pm10Value}
             pm25Value={this.state.pm25Value}
             so2Value={this.state.so2Value}
-            coValue={this.state.coValue}
             dustStateV={this.state.dustStateV}
             time={this.state.time}
             >
           </Weather>
-
         </View>
-
         }
       </View>
     );

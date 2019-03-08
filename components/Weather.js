@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button, Modal, Image } from 'react-native';
 
+
 import PropTypes from 'prop-types';
 import { dustConditions } from '../util/dustConditions';
 
-const Weather = ({dustStateV,stationName,no2Value,o3Value,pm10Value,pm25Value,so2Value,coValue,time}) => {
+const Weather = ({dustStateV,stationName,no2Value,o3Value,pm10Value,pm25Value,so2Value, time}) => {
 
   const dustCondition = Object.assign({},dustConditions[dustStateV] )
   const onPressTest = () => {alert('hh')};
@@ -16,12 +17,11 @@ const Weather = ({dustStateV,stationName,no2Value,o3Value,pm10Value,pm25Value,so
           <Text style={styles.subtitle}>현위치가장 가까운측정소 : {stationName}</Text>
         </View>
       </View>
-
       <View style={[styles.BodyMainBox,
          {marginTop : 0}]} >
-        <View style={[styles.BoxStyle, { backgroundColor : dustCondition.color, borderColor : dustCondition.color } ]}>
-          <Text style={styles.boxtitle}>{dustCondition.title}</Text>
-        </View>
+        <Text style={[styles.headBox,
+        { backgroundColor : dustCondition.color }]
+        }>{dustCondition.title}</Text>
         <View>
           <Text style={styles.subtitle}>{time}</Text>
           <Text style={styles.subtitle}>{dustCondition.subtitle}</Text>
@@ -29,47 +29,28 @@ const Weather = ({dustStateV,stationName,no2Value,o3Value,pm10Value,pm25Value,so
       </View>
 
       <View style={[styles.BodyMainBox,
-         {marginTop : 0, flexDirection : "column", alignItems : 'center'}
+         {marginTop : 0}
          ]} >
-        <View style = { {flexDirection : 'row'} }>
-          <View style={ [styles.subBox,
-            {  alignItems : 'center'  }]} >
-            <Text >미세먼지</Text>
-            <Text >{pm10Value}</Text>
-          </View>
-
-          <View style={ [styles.subBox,
-            {  alignItems : 'center'  }]} >
-            <Text >초미세먼지</Text>
-            <Text >{pm25Value}</Text>
-          </View>
-
-          <View style={ [styles.subBox,
-            {  alignItems : 'center'  }]} >
-            <Text >오존</Text>
-            <Text >{o3Value}</Text>
-          </View>
-        </View>
-        <View style = { {flexDirection : 'row'} }>
-          <View style={ [styles.subBox,
-            {  alignItems : 'center'  }]} >
-            <Text >이산화질소</Text>
-            <Text >{no2Value}</Text>
-          </View>
-
-          <View style={ [styles.subBox,
-            {  alignItems : 'center'  }]} >
-            <Text >아황산가스</Text>
-            <Text >{so2Value}</Text>
-          </View>
-
-          <View style={ [styles.subBox,
-            {  alignItems : 'center'  }]} >
-            <Text >이산화탄소</Text>
-            <Text >{coValue}</Text>
-          </View>
+        <View>
+          <Text style={styles.subtitle}>미세먼지 : {pm10Value}</Text>
+          <Text style={styles.subtitle}>초미세먼지 : {pm25Value}</Text>
+          <Text style={styles.subtitle}>오존 : {o3Value}</Text>
+          <Text style={styles.subtitle}>이산화질소 : {no2Value}</Text>
+          <Text style={styles.subtitle}>아황산가스 : {so2Value}</Text>
         </View>
       </View>
+
+
+      <View style={[styles.BodyMainBox,
+         {marginTop : 0}
+         ]} >
+        <View>
+          <Text style={styles.subtitle}>미세먼지 : | 0 ~ 30 | 31 ~80 | 81 ~ 150 | 150~ </Text>
+          <Text style={styles.subtitle}>초미세먼지 :  | 0 ~ 15 | 16 ~35 | 36 ~ 75 | 67~ </Text>
+        </View>
+      </View>
+
+
     </View>
   );
 };
@@ -79,12 +60,6 @@ Weather.propTypes = {
 }
 
 const styles = StyleSheet.create({
-  subBox : {
-    fontSize : 20,
-    width : 100,
-    borderWidth: 1.5,
-    borderColor: 'white',
-  },
   headerContainer: {
     flex: 1,
     alignItems: 'center',
@@ -109,15 +84,21 @@ const styles = StyleSheet.create({
     margin : 10,
     padding :10
   },
-  BoxStyle: {
+  headBox: {
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems : 'center',
+    padding :10,
+    color : 'white',
     borderRadius: 4,
     borderWidth: 1.5,
+    borderColor: 'red',
+    backgroundColor: 'red',
     fontSize : 30,
-    fontWeight : 'bold',
-    width : 100
+    fontWeight : 'bold'
   },
+
+
   title: {
     fontSize: 40,
     fontWeight : 'bold',
@@ -127,11 +108,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'black',
     paddingLeft : 10
-  },
-  boxtitle: {
-    fontSize: 30,
-    color: 'white',
-  },
+  }
 });
 
 export default Weather;
