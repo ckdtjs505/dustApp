@@ -11,8 +11,9 @@ import { CONSUMER_KET } from './util/sgisAPIKey';
 import { CONSUMER_SECRET } from './util/sgisAPIKey';
 
 import Weather from './components/Weather';
-import Table from './components/Table';
+import ViewDustCondition from './components/viewDustCondition';
 
+import { ScrollView } from 'react-native-gesture-handler';
 import { black } from 'ansi-colors';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -22,15 +23,27 @@ const GRS80 = 5181;
 export default class App extends React.Component {
   state = {
     isLoading: true,
-    stationName: '',
-    no2Value : 0,
-    o3Value : 0,
-    pm10Value : 0,
-    pm25Value : 0,
-    so2Value : 0,
-    dustStateV : '',
-    time : 0,
-    dong : null,
+    stationName: '',  // 가까운 측정소
+
+    pm10Grade : 0, // 미세먼지 등급
+    pm10Value : 0, // 미세먼지
+
+    pm25Grade : 0, // 초미세먼지 등급
+    pm25Value : 0, // 초미세먼지
+
+    coGrade : 0, // 이산화탄소 등급
+    coValue : 0, // 이산화탄소
+
+    no2Grade : 0, // 이산화질소 등급
+    no2Value : 0, // 이산화질소
+
+    o3Grade : 0,  // 오존 등급
+    o3Value : 0,  // 오존
+
+    so2Grade : 0, // 아황산가스 등급
+    so2Value : 0, // 아황산가스
+
+    time : 0,   // 측정시간
     error: null
   };
 
@@ -78,7 +91,7 @@ export default class App extends React.Component {
         stationName : data.list[0].stationName
       });
     })
-  }
+  }wkdgns
   fetchWeather(dong) {
     const urlC = `${API_GET}?serviceKey=${API_KEY}&numOfRows=10&pageNo=1&stationName=${dong}&dataTerm=DAILY&ver=1.3&_returnType=json`
     console.log(urlC);
@@ -88,36 +101,30 @@ export default class App extends React.Component {
       .then(data => {
         console.log(data.list[0]);
         this.setState({
-          no2Value : data.list[0].no2Value,
-          o3Value : data.list[0].o3Value,
+          pm10Grade : data.list[0].pm10Grade,
           pm10Value : data.list[0].pm10Value,
+
+          pm25Grade : data.list[0].pm25Grade,
           pm25Value : data.list[0].pm25Value,
+
+          coGrade : data.list[0].coGrade,
+          coValue : data.list[0].coValue,
+
+          no2Grade : data.list[0].no2Grade,
+          no2Value : data.list[0].no2Value,
+
+          o3Grade : data.list[0].o3Grade,
+          o3Value : data.list[0].o3Value,
+
+          so2Grade : data.list[0].so2Grade,
           so2Value : data.list[0].so2Value,
           time : data.list[0].dataTime,
           isLoading: false
         });
-        this.bis(data.list[0].pm25Value, data.list[0].pm10Value);
       });
   }
 
-  bis(pm25, pm10){
-    var dustState='';
-    if (pm10 <= 15 ) {
-      dustState = 'Good';
-    } else if(pm10 > 15 && pm10 <= 35){
-      dustState = 'Soso'
-    } else if (pm10 > 35 && pm10 <=75) {
-      dustState = 'Bad'
-    } else if (pm10 > 75) {
-      dustState = 'VeryBad'
-    } else {
-      dustState = 'VeryBad'
-    }
 
-    this.setState({
-      dustStateV : dustState
-    })
-  }
 
   render() {
     const { isLoading } = this.state;
@@ -130,7 +137,7 @@ export default class App extends React.Component {
     return (
       <View style={styles.container}>
         {isLoading ?
-        <View style={[styles.container, styles.horizontal]}>
+        <View style={[styles.container , {justifyContent: 'center', alignItems : 'center'}]}>
           <ActivityIndicator size="large" color="black" />
           <Text style={styles.Loding}> Loading ... </Text>
         </View>
@@ -146,15 +153,26 @@ export default class App extends React.Component {
           </View>
           <Weather
             stationName={this.state.stationName}
-            no2Value={this.state.no2Value}
-            o3Value={this.state.o3Value}
+            pm10Grade={this.state.pm10Grade}
             pm10Value={this.state.pm10Value}
             pm25Value={this.state.pm25Value}
-            so2Value={this.state.so2Value}
-            dustStateV={this.state.dustStateV}
             time={this.state.time}
             >
           </Weather>
+          <ViewDustCondition
+            pm10Grade={this.state.pm10Grade}
+            pm10Value={this.state.pm10Value}
+            pm25Grade={this.state.pm25Grade}
+            pm25Value={this.state.pm25Value}
+            coGrade={this.state.coGrade}
+            coValue={this.state.coValue}
+            no2Grade={this.state.no2Grade}
+            no2Value={this.state.no2Value}
+            o3Grade={this.state.o3Grade}
+            o3Value={this.state.o3Value}
+            so2Grade={this.state.so2Grade}
+            so2Value={this.state.so2Value}
+          />
         </View>
         }
       </View>
@@ -166,7 +184,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#efefef',
-    justifyContent: 'center'
+    paddingTop: 15,
+    // justifyContent: 'center'
   },
   horizontal: {
     alignItems : 'center',
@@ -175,7 +194,7 @@ const styles = StyleSheet.create({
     marginTop : 10,
     fontSize: 20,
     fontWeight : 'bold',
-    color: 'black'
+    color: 'black',
   },
   button : {
     margin : 10
